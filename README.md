@@ -10,6 +10,11 @@ credentials.json, token.json, and send_account.txt into
 $HOME/.ssh/MailThroughGoogle/, it's easy. You import the
 GmailSender class, and call
 
+    sender = GmailSender()
+    sender.send_gmail('my_friend@his_company.com',  # Destination
+                      'Our Picnic',                 # Subject
+                      'I look forward to it!')      # Body
+
 
 - Sending Gmails from Python:
 

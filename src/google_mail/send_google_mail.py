@@ -3,7 +3,7 @@
  # @Author: Andreas Paepcke
  # @Date:   2025-03-10 11:59:34
  # @Last Modified by:   Andreas Paepcke
- # @Last Modified time: 2025-03-10 16:41:16
+ # @Last Modified time: 2025-03-10 17:27:35
  #
  # **********************************************************
 import base64
@@ -18,8 +18,13 @@ from googleapiclient.discovery import build
 # Module provides the facility to send emails from a fixed 
 # GMAIL sender account after proper setup. 
 #
+# The GmailSender is a singleton:
+#
+# Usage: GmailSender.send_gmail('my_friend@his_company.com', 'Our Picnic', 'I look forward to it!')
+#
 # Assumptions:
-#    o This application has been registered as an OAuth 2.0 Client.
+#    o This application has been registered with Google as an 
+#      OAuth 2.0 Client.
 #    o $HOME/.ssh/MailThroughGoogle contains
 #
 #          * credentials.json and/or token.json
@@ -32,18 +37,34 @@ from googleapiclient.discovery import build
 
 class GmailSender:
 
+    __instance = None
+    __is_initialized = False
+     
     # Scopes for which this application should have rights
     SCOPES = ['https://mail.google.com/']
-    #SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
     home_dir   = Path.home()
     GMAIL_ROOT = home_dir / '.ssh/MailThroughGoogle'
+
+    #-------------------------
+    # __new__ 
+    #--------------
+    
+    def __new__(cls):
+        if GmailSender.__instance is None:
+            GmailSender.__instance = object.__new__(cls)
+        return GmailSender.__instance
     
     #------------------------------------
     # Constructor
     #-------------------    
 
     def __init__(self):
+
+        if GmailSender.__is_initialized:
+            return
+        else:
+            GmailSender.__is_initialized = True
 
         # For convenience:
         gmail_root = GmailSender.GMAIL_ROOT
@@ -67,19 +88,19 @@ class GmailSender:
     #-------------------
 
     def send_gmail(self, recipient, subject, body):
-        message_dict = self.create_message(self.sender,
+        message_dict = self._create_message(self.sender,
                                            recipient, 
                                            subject,
                                            body)        
         
-        self.send_message_impl(message_dict)
+        self._send_message_impl(message_dict)
 
 
     #------------------------------------
-    # create_message
+    # _create_message
     #-------------------    
 
-    def create_message(self, sender, to, subject, message_text):
+    def _create_message(self, sender, to, subject, message_text):
         '''
         Reuturns a wire-ready message in form expected
         by the Gmail smtp server
@@ -106,10 +127,10 @@ class GmailSender:
         return {'raw': raw_message.decode('utf-8')} #important to decode the byte object to string.    
 
     #------------------------------------
-    # send_message_impl
+    # _send_message_impl
     #-------------------
 
-    def send_message_impl(self, message):
+    def _send_message_impl(self, message):
         '''
         Nitty gritty of sending a Gmail message prepared
         in create_message()
@@ -128,10 +149,10 @@ class GmailSender:
             raise RuntimeError(e)
 
     #------------------------------------
-    # get_gmail_service
+    # _get_gmail_service
     #-------------------
     
-    def get_gmail_service(self):
+    def _get_gmail_service(self):
         '''
         Return a Gmail service instance. Used for two 
         phases:

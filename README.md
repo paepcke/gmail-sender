@@ -3,7 +3,12 @@ Sends emails programmatically using OAuth2 credentials
 
 The biggest chore is to register the application that uses this
 package with Google's labyrinthine OAuth2 machinery. Its Web
-pages seem to change often. Here is a very rough outline.
+pages seem to change often. Below is a very rough outline.
+
+After you accomplished that, and placed the three files,
+credentials.json, token.json, and send_account.txt into
+$HOME/.ssh/MailThroughGoogle/, it's easy. You import the
+GmailSender class, and call
 
 
 - Sending Gmails from Python:

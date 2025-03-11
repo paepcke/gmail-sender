@@ -3,7 +3,7 @@
  # @Author: Andreas Paepcke
  # @Date:   2025-03-10 11:59:34
  # @Last Modified by:   Andreas Paepcke
- # @Last Modified time: 2025-03-10 17:27:35
+ # @Last Modified time: 2025-03-10 17:32:15
  #
  # **********************************************************
 import base64
@@ -20,7 +20,9 @@ from googleapiclient.discovery import build
 #
 # The GmailSender is a singleton:
 #
-# Usage: GmailSender.send_gmail('my_friend@his_company.com', 'Our Picnic', 'I look forward to it!')
+# Usage: GmailSender().send_gmail('my_friend@his_company.com',  # Destination
+#                                 'Our Picnic',                 # Subject
+#                                 'I look forward to it!')      # Body
 #
 # Assumptions:
 #    o This application has been registered with Google as an 

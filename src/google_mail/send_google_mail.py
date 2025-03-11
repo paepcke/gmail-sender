@@ -3,7 +3,7 @@
  # @Author: Andreas Paepcke
  # @Date:   2025-03-10 11:59:34
  # @Last Modified by:   Andreas Paepcke
- # @Last Modified time: 2025-03-11 13:39:53
+ # @Last Modified time: 2025-03-11 16:07:56
  #
  # **********************************************************
 import base64
@@ -80,7 +80,7 @@ class GmailSender:
             with open(sender_path, 'r') as fd:
                 self.sender = fd.read().strip()
         except FileNotFoundError as e:
-            err_msg = f"Directory ${gmail_root} must contain token.json or credentials.json, plus sender.txt. The latter is missing"
+            err_msg = f"Directory ${gmail_root} must contain token.json or credentials.json, plus send_account.txt."
             raise FileNotFoundError(err_msg)
 
         self.service = self._get_gmail_service()

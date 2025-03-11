@@ -21,4 +21,4 @@ dev = [
 ]
 
 [tool.setuptools]
-packages = ["src"]
+package-dir = {"" = "src"}
